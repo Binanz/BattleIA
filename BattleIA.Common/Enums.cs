@@ -1,3 +1,5 @@
+// definition des constantes du programme
+
 namespace BattleIA
 {
 

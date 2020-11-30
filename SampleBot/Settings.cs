@@ -1,5 +1,6 @@
 ﻿using System;
 
+// 'initialisaation' des parametres du serveur et client
 namespace SampleBot
 {
     public class Settings

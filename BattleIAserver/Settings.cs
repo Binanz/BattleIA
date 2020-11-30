@@ -1,5 +1,7 @@
 ﻿using System;
 
+//Constantes utiles pour le serveur
+
 namespace BattleIAserver
 {
     public class Settings

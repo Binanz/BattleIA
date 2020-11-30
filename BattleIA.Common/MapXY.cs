@@ -1,4 +1,6 @@
-﻿namespace BattleIA
+﻿// on defini l'objet MapXY
+
+namespace BattleIA
 {
     public class MapXY
     {

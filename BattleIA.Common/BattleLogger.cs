@@ -4,6 +4,8 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
+
+// fichier de normalisation des messages serveur/client en console
 namespace BattleIA
 {
     enum BattleLogLevel
@@ -17,6 +19,8 @@ namespace BattleIA
         INFO = 0x6,
         DEBUG = 0x7
     }
+
+    // création d'un fichier contenant toutes les infos (nom, date, erreurs etc)
     public class BattleLogger
     {
 
@@ -86,6 +90,7 @@ namespace BattleIA
             logFileS.Write(line, 0, line.Length);
         }
 
+        // application de couleur
         void writeToConsole(BattleLogLevel level, String message)
         {
             lock (_MessageLock)
@@ -127,6 +132,7 @@ namespace BattleIA
             }
         }
 
+        // definition des types de messages console
         public void info(String message, params object[] list)
         {
             _log(BattleLogLevel.INFO, message, list);

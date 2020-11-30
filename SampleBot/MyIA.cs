@@ -37,6 +37,7 @@ namespace SampleBot
             Weight = weight;
             Walkable = walkable;
         }
+        // fonction qui retourne la distance entre le bot et un point x, y 
         public float get_distance(int x, int y){
             float distance = (float)Math.Sqrt((x - Position.X)*(x - Position.X) + (y - Position.Y)* (y - Position.Y));
             return distance;
@@ -147,6 +148,7 @@ namespace SampleBot
              return route;
         }
 
+        // construction de la rout à emprunter pour le bot, retourne l la liste de mouvements
         List<MoveDirection> build_route(Stack<GridPoint> points)
         {
             List<MoveDirection> l = new List<MoveDirection>();
@@ -187,7 +189,7 @@ namespace SampleBot
             return l;
         }
 
-
+        // definition des mouvements nord sud est ouest
         List<MoveDirection> find_route(GridPoint target)
         {
 
@@ -234,6 +236,7 @@ namespace SampleBot
         /// </summary>
         /// <param name="distance">Distance.</param>
         /// <param name="informations">Informations.</param>
+        /// Compte les energies et defini si une case est "walkable" ou non
         public void AreaInformation(byte distance, byte[] informations)
         {
             if (distance <=1) { return; }

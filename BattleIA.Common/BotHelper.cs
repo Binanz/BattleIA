@@ -1,4 +1,6 @@
-﻿namespace BattleIA
+﻿// On défini les interactions bot-serveur et les actions du bot (tirer, bouger...)
+
+namespace BattleIA
 {
     public static class BotHelper
     {
