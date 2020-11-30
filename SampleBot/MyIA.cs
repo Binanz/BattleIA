@@ -9,17 +9,10 @@ namespace SampleBot
     
     public class GridPoint
     {
-        // Change this depending on what the desired size is for each element in the grid
-        public static int GridPoint_SIZE = 10;
+       
         public GridPoint Parent;
         public Vector2 Position;
-        public Vector2 Center
-        {
-            get
-            {
-                return new Vector2(Position.X + GridPoint_SIZE / 2, Position.Y + GridPoint_SIZE / 2);
-            }
-        }
+      
         public float DistanceToTarget;
         public float Cost;
         public float Weight;
@@ -34,6 +27,7 @@ namespace SampleBot
             }
         }
         public bool Walkable;
+        
         public GridPoint(Vector2 pos, bool walkable=true, float weight = 1)
         {
             Parent = null;
@@ -43,11 +37,11 @@ namespace SampleBot
             Weight = weight;
             Walkable = walkable;
         }
-        public int get_distance(int x, int y)
-        {
-            int distance = (int)(Math.Abs(x - Position.X) + Math.Abs(y - Position.Y));
+        public float get_distance(int x, int y){
+            float distance = (float)Math.Sqrt((x - Position.X)*(x - Position.X) + (y - Position.Y)* (y - Position.Y));
             return distance;
         }
+        
     }
 
     public class MyIA
@@ -115,17 +109,19 @@ namespace SampleBot
             // pour chaque nrjtpoint appelé 'p' de nrj_list : 
             // distance = valeur absolue (meX - GridPoint.posx)+ abs(meY-GridPoint.posy)
             GridPoint target = new GridPoint(new Vector2(0,0));
-            target.DistanceToTarget = 9999;
+            float mindist = 9999;
             foreach (GridPoint p in pliste)
             {
-                p.get_distance(meX, meY);
-                if (p.DistanceToTarget < target.DistanceToTarget)
+        
+                float d = p.get_distance(meX,meY);
+                if (d < mindist)
                 {
                     target = p;
-                    target.Position.X = target.Position.X ;
-                    target.Position.Y = target.Position.Y ;
+                    mindist = d ;
+                    Console.WriteLine($"[TGT] mindist = {mindist}");
                 }
             }
+            Console.WriteLine($"[TGT] position {target.Position.X} {target.Position.Y} ");
             return (target);
         }
 
@@ -133,37 +129,61 @@ namespace SampleBot
         {
             Astar as_Path = new Astar(map);
             Stack<GridPoint> solution = new Stack<GridPoint>();
+
             solution = as_Path.FindPath(new Vector2(meX,meY), new Vector2(target.Position.X,target.Position.Y ));
-            foreach (GridPoint p in solution){
-                Console.WriteLine(p);
+            // Reverse path (from start to end...)
+            Stack<GridPoint> rsolution = new Stack<GridPoint>();
+            if (solution.Count ==0){
+                return new List<MoveDirection>();
             }
+            foreach (GridPoint p in solution){
+                Console.WriteLine($"[ROUTE] {p.Position.X},{p.Position.Y}");
+            }
+            Console.WriteLine($"[ROUTE] {meX},{meY}");
+         
+ 
             route = build_route(solution);
-            return route;
+
+             return route;
         }
 
         List<MoveDirection> build_route(Stack<GridPoint> points)
         {
             List<MoveDirection> l = new List<MoveDirection>();
             GridPoint init = new GridPoint(new Vector2(meX,meY));
-
+            float nx = meX;
+            float ny = meY;
             foreach (GridPoint p in points) {
-                if (init.Position.X>p.Position.X) {
-                    l.Add(MoveDirection.South);
-                    continue;
-                }
-                if (init.Position.X<p.Position.X) {
+                if (nx>p.Position.X) {
                     l.Add(MoveDirection.North);
+                    nx = p.Position.X;
+                    ny = p.Position.Y;
+
                     continue;
                 }
-                if (init.Position.Y>p.Position.Y) {
-                    l.Add(MoveDirection.West);
+                if (nx<p.Position.X) {
+                    l.Add(MoveDirection.South);
+                    nx = p.Position.X;
+                    ny = p.Position.Y;
                     continue;
                 }
-                if (init.Position.Y<p.Position.Y) {
+                if (ny>p.Position.Y) {
                     l.Add(MoveDirection.East);
+                    nx = p.Position.X;
+                    ny = p.Position.Y;
+                    continue;
+                }
+                if (ny<p.Position.Y) {
+                    l.Add(MoveDirection.West);
+                    nx = p.Position.X;
+                    ny = p.Position.Y;
                     continue;
                 }
             }
+            foreach (MoveDirection m in l){
+                Console.WriteLine(m);
+            }
+
             return l;
         }
 
@@ -216,7 +236,7 @@ namespace SampleBot
         /// <param name="informations">Informations.</param>
         public void AreaInformation(byte distance, byte[] informations)
         {
-            if (distance == 0) { return; }
+            if (distance <=1) { return; }
 
             int radar_nrj = 0;
             List<GridPoint> NRJ_list = new List<GridPoint>();
@@ -242,7 +262,7 @@ namespace SampleBot
                     {
                         meX = j;
                         meY = i;
-                        p.Walkable=false;
+                        p.Walkable=true;
                     }
                     if (informations[index] == (byte)CaseState.Wall)
                     {
@@ -251,6 +271,7 @@ namespace SampleBot
                     if (informations[index] == (byte)CaseState.Empty)
                     {
                         p.Walkable=true;
+
                     } 
                     index++;
                     lineCells.Add(p);

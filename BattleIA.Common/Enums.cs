@@ -1,4 +1,4 @@
-﻿namespace BattleIA
+namespace BattleIA
 {
 
     public enum BotState : byte
@@ -12,6 +12,7 @@
         WaitingAnswerD = 6,
         WaitingAction = 7,
         IsDead = 8,
+        IsRespawned = 9
     }
 
     public enum Message : byte
@@ -22,17 +23,30 @@
         m_yourTurn = (byte)'T',
         m_newInfos = (byte)'C',
         m_Map = (byte)'M',
-        m_Position = (byte)'P'
+        m_Position = (byte)'P',
+        m_Respawn = (byte)'R'
 
 
     }
+
+    /*
+    Empty =
+
+    */
     public enum CaseState : byte
     {
         Empty = 0,
-        // OurBot = 1,
+        OurBot = 1,
         Wall = 2,
         Energy = 3,
         Ennemy = 4,
+        Respawn = 5,
+        Return_to_Start = 6,
+        Race_Finish = 7,
+        Spawn_T1 = 8,
+        Spawn_T2 = 9,
+        Poison = (byte)'P',
+
     }
 
     public enum BotAction : byte
@@ -51,6 +65,7 @@
         Position = 3,
         Turn = 9,
         Change = 11,
+        Respawn = 1
     }
 
     public enum MoveDirection : byte
